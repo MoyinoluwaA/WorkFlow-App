@@ -44,6 +44,7 @@ jobs:
           GITHUB_ID: ${{ secrets.OAUTH_GITHUB_ID }}
           GITHUB_SECRET: ${{ secrets.OAUTH_GITHUB_ID }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
         with: 
           context: .
           tags: |
@@ -56,6 +57,7 @@ jobs:
             GITHUB_SECRET=${{ secrets.OAUTH_GITHUB_ID }}
             MONGODB_URI=${{ secrets.MONGODB_URI }}
             NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
