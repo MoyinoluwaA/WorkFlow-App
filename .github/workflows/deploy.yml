@@ -39,17 +39,16 @@ jobs:
         uses: docker/build-push-action@v5
         with: 
           context: .
-          build-args: |
-            GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
-            GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
-            GITHUB_ID: ${{ secrets.OAUTH_GITHUB_ID }}
-            GITHUB_SECRET: ${{ secrets.OAUTH_GITHUB_SECRET }}
-            MONGODB_URI: ${{ secrets.MONGODB_URI }}
-            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}     
-          run: echo "image=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest" >> $GITHUB_OUTPUT
+          build-args: |
+            --build-arg GOOGLE_ID=${{ secrets.GOOGLE_ID }}
+            --build-arg GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}
+            --build-arg GITHUB_ID=${{ secrets.GITHUB_ID }}
+            --build-arg GITHUB_SECRET=${{ secrets.GITHUB_ID }}
+            --build-arg MONGODB_URI=${{ secrets.MONGODB_URI }}
+            --build-arg NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
@@ -57,7 +56,7 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1.4.11
