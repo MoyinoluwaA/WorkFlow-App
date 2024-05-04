@@ -11,7 +11,7 @@ env:
   ECS_SERVICE: ${{ vars.ECS_SERVICE }}                 
   ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}                
   ECS_TASK_DEFINITION: ${{ vars.ECS_TASK_DEFINITION }} 
-  CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}          
+  CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
 
 jobs:
   deploy:
@@ -36,16 +36,23 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
+        uses: docker/build-push-action@v5
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
-        run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        with: 
+          context: .
+          build-args: |
+            GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+            GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+            GITHUB_ID: ${{ secrets.OAUTH_GITHUB_ID }}
+            GITHUB_SECRET: ${{ secrets.OAUTH_GITHUB_SECRET }}
+            MONGODB_URI: ${{ secrets.MONGODB_URI }}
+            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          tags: |
+            $ECR_REGISTRY/$ECR_REPOSITORY:latest
+            $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG     
+          run: echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def

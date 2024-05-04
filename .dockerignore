@@ -1,2 +1,8 @@
+Dockerfile
+.dockerignore
 node_modules
 .github/
+README.md
+.next
+.git
+.husky
