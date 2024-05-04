@@ -34,4 +34,4 @@ COPY --from=build /app/public ./public
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "start;"]
