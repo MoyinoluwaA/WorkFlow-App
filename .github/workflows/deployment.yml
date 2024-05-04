@@ -37,6 +37,13 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         uses: docker/build-push-action@v5
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+          GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+          GITHUB_ID: ${{ secrets.OAUTH_GITHUB_ID }}
+          GITHUB_SECRET: ${{ secrets.OAUTH_GITHUB_ID }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
         with: 
           context: .
           tags: |
@@ -45,8 +52,8 @@ jobs:
           build-args: |
             --build-arg GOOGLE_ID=${{ secrets.GOOGLE_ID }}
             --build-arg GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}
-            --build-arg GITHUB_ID=${{ secrets.GITHUB_ID }}
-            --build-arg GITHUB_SECRET=${{ secrets.GITHUB_ID }}
+            --build-arg GITHUB_ID=${{ secrets.OAUTH_GITHUB_ID }}
+            --build-arg GITHUB_SECRET=${{ secrets.OAUTH_GITHUB_ID }}
             --build-arg MONGODB_URI=${{ secrets.MONGODB_URI }}
             --build-arg NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
 
