@@ -1,4 +1,4 @@
-FROM node:20 AS base
+FROM --platform=linux/amd64 node:20 AS base
 
 #Add environmental variables
 ARG GOOGLE_ID
