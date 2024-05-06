@@ -69,7 +69,7 @@ jobs:
   
   scan: 
     name: Scan
-    runs-on: arm64v8/docker
+    runs-on: ubuntu-latest
     steps: 
       - name: Checkout
         uses: actions/checkout@v4
