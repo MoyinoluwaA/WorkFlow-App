@@ -5,6 +5,7 @@ import { PiLineVerticalThin } from 'react-icons/pi';
 import { LiaLongArrowAltDownSolid } from 'react-icons/lia';
 import { CiMenuKebab } from 'react-icons/ci';
 import { MdDelete } from 'react-icons/md';
+import Button from './Button';
 
 export interface WorkflowCard {
   type: string;
@@ -93,7 +94,10 @@ const WorkflowCard = ({
           </div>
           <CiMenuKebab
             className="cursor-pointer"
-            onClick={() => setShowWorkflowItemList(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowWorkflowItemList((prev) => !prev);
+            }}
           />
         </div>
 
@@ -102,13 +106,14 @@ const WorkflowCard = ({
             <ul>
               {workflowCardActions.map((workflowCardAction, index) => (
                 <li key={index}>
-                  <button
-                    className="flex items-center"
+                  <Button
+                    className="flex items-center p-0"
+                    disableDefaultStyle={true}
                     onClick={workflowCardAction.onClick}
                   >
                     <span className="mr-2">{workflowCardAction.icon}</span>
                     <span>{workflowCardAction.name}</span>
-                  </button>
+                  </Button>
                 </li>
               ))}
             </ul>

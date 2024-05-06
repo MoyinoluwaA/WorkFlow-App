@@ -7,12 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "cypress open"
   },
   "dependencies": {
     "@uiw/react-json-view": "^2.0.0-alpha.24",
     "axios": "^1.6.8",
     "husky": "^9.0.11",
+    "joi": "^17.13.1",
     "mongodb": "^6.5.0",
     "next": "14.2.3",
     "next-auth": "^4.24.7",
@@ -24,6 +26,8 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cypress": "^13.8.1",
+    "cypress-promise": "^1.1.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "eslint-config-prettier": "^9.1.0",

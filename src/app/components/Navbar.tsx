@@ -1,7 +1,6 @@
 import React from 'react';
 import { signOut } from 'next-auth/react';
 import Button from './Button';
-import { Session } from 'next-auth';
 
 interface NavbarProps {
   session: any;

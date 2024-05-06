@@ -13,8 +13,45 @@ env:
   ECS_TASK_DEFINITION: ${{ vars.ECS_TASK_DEFINITION }} 
   CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
   NEXTAUTH_URL: ${{ vars.NEXTAUTH_URL }}
+  GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+  GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+  GITHUB_ID: ${{ secrets.OAUTH_GITHUB_ID }}
+  GITHUB_SECRET: ${{ secrets.OAUTH_GITHUB_ID }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint app
+        run: |
+          npm install
+          npm run lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Cypress.io
+        uses: cypress-io/github-action@v6.6.1
+  
+  scan: 
+    name: Scan
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Scan app
+        run: |
+          npm install
+          npm audit
+
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -38,16 +75,9 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         uses: docker/build-push-action@v5
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
-          GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
-          GITHUB_ID: ${{ secrets.OAUTH_GITHUB_ID }}
-          GITHUB_SECRET: ${{ secrets.OAUTH_GITHUB_ID }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-          NEXTAUTH_URL: ${{ env.NEXTAUTH_URL }}
         with: 
           context: .
+          push: true
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}     

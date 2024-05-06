@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Workflow App
 
-## Getting Started
+## Introduction
+Workflow App is a simple application where on trigger of an action, it creates an outgoing API call. The trigger is a call to an internal endpoint. The UI requires an input URL with a query param to trigger the API Call. API configuration calls are being stored in MongoDb.
 
-First, run the development server:
+Application was built with NextJs, Typescript, TailwindCSS, MongoDb and Next-Auth for Oauth authentication. CI/CD was done using Github actions.
+
+On load of application, user authenticates using either Google or Github credentials. User can then access the application functionality.
+
+## API Documentation
+Link - [Workflow App API](https://documenter.getpostman.com/view/15779746/2sA3JGg4En)
+
+## Set Up Development Environment
+If you will like to run this application locally, follow these steps:
+
+- Check that nodejs is installed:
+
+```
+  node --version
+  >> v20.11.1 or greater
+```
+
+- Clone the repo and cd into it:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+  git clone https://github.com/MoyinoluwaA/WorkFlow-App
+  cd WorkFlow-App
+```
+
+- Install dependencies:
+
+```bash
+  npm install
+```
+
+- Create a `.env` file in the root folder and add  the configuration in the `.env.sample` file to it. Make sure you replace the values with the right values:
+
+```
+  GOOGLE_ID = <GOOGLE_ID> Google OAUTH Client Id
+  GOOGLE_SECRET = <GOOGLE_SECRET> Google OAUTH Client Secret
+  GITHUB_ID = <GITHUB_ID> Github OAUTH Client Id
+  GITHUB_SECRET = <GITHUB_SECRET> Github OAUTH Client Secret
+  MONGODB_URI = <MONGODB_URI> Use a mongoDb Atlas Url
+  NEXTAUTH_URL = <NEXTAUTH_URL> base url of application to be used by next-auth
+```
+
+- Run the application with the command:
+
+```
+  npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Lint the application with the command:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```
+  npm run lint
+```
 
-## Learn More
+- Test the endpoint using Cypress with the command:
 
-To learn more about Next.js, take a look at the following resources:
+```
+  npm run test
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Deploy Containerized Application To AWS Fargate and ECS
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Prerequisites:
+- Dockerfile: in the root of the repository
+- 

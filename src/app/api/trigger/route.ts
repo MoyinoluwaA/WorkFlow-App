@@ -1,27 +1,46 @@
 import axios from 'axios';
-import { WorkflowRepository } from '../repositories/workflow';
+import WorkflowRepository from '../repositories/workflow';
+import { validateInput } from '../middlewares/validation';
+import { addActionSchema } from '../schemas/action';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
-    const { action, url, triggerInput, triggerInputValue } = data;
+    await validateInput(addActionSchema, data);
 
-    if (!action || !url || !triggerInput || !triggerInputValue) {
-      throw new Error('add all required fields');
-    }
-
-    if (action !== 'GET') {
-      throw new Error('Logic can only handle GET requests');
-    }
-
+    const repository = await WorkflowRepository;
+    const configId = await repository.addActionConfiguration(data);
+    const { url, triggerInput, triggerInputValue } = data;
     const res = await axios.get(`${url}?${triggerInput}=${triggerInputValue}`);
 
-    await WorkflowRepository().addAction(res);
-
-    return Response.json(res.data);
-  } catch (error: any) {
-    return new Response(`Error: ${error.message}`, {
-      status: 400,
+    await repository.addActionResult({
+      ...res.data,
+      actionConfigId: configId,
     });
+
+    return NextResponse.json(
+      {
+        status: 'success',
+        data: res.data,
+        message: 'Successfully triggered outgoing request',
+        code: 200,
+      },
+      {
+        status: 200,
+      },
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      {
+        status: 'error',
+        error: error.error,
+        message: error.message,
+        code: error.status || 500,
+      },
+      {
+        status: error.status || 500,
+      },
+    );
   }
 }
