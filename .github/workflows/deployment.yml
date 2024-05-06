@@ -27,17 +27,40 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
+      - name: Save Cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: install
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
 
       - name: Lint app
-        run: |
-          npm install
-          npm run lint
+        run: npm run lint
 
   test:
     name: Test
     runs-on: ubuntu-latest
     steps: 
-      - name: Cypress.io
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Save Cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: install
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Test app using Cypress.io
         uses: cypress-io/github-action@v6.6.1
   
   scan: 
@@ -46,16 +69,26 @@ jobs:
     steps: 
       - name: Checkout
         uses: actions/checkout@v4
+      
+      - name: Save Cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: install
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
 
       - name: Scan app
-        run: |
-          npm install
-          npm audit
+        run: npm audit
 
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
+    needs: [lint, test, scan]
 
     steps:
       - name: Checkout
