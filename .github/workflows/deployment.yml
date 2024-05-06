@@ -16,7 +16,7 @@ env:
   GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
   GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
   GITHUB_ID: ${{ secrets.OAUTH_GITHUB_ID }}
-  GITHUB_SECRET: ${{ secrets.OAUTH_GITHUB_ID }}
+  GITHUB_SECRET: ${{ secrets.OAUTH_GITHUB_SECRET }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
 
@@ -122,7 +122,7 @@ jobs:
             GOOGLE_ID=${{ secrets.GOOGLE_ID }}
             GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}
             GITHUB_ID=${{ secrets.OAUTH_GITHUB_ID }}
-            GITHUB_SECRET=${{ secrets.OAUTH_GITHUB_ID }}
+            GITHUB_SECRET=${{ secrets.OAUTH_GITHUB_SECRET }}
             MONGODB_URI=${{ secrets.MONGODB_URI }}
             NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
             NEXTAUTH_URL=${{ env.NEXTAUTH_URL }}
