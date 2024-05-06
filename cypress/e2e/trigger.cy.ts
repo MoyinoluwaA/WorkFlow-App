@@ -27,7 +27,6 @@ describe('Trigger action', () => {
           method: 'POST',
           body: {
             url: 'https://api.agify.io',
-            triggerInputValue: 'dupe',
           },
           failOnStatusCode: false,
         })
@@ -38,8 +37,8 @@ describe('Trigger action', () => {
           expect(res.body.message).to.equal('validation error occured');
           expect(res.body.error)
             .to.be.an('array')
-            .to.have.lengthOf(2)
-            .to.deep.equal(['action is required', 'triggerInput is required']);
+            .to.have.lengthOf(1)
+            .to.deep.equal(['action is required']);
         }),
     );
   });

@@ -12,7 +12,11 @@ export async function POST(request: NextRequest) {
     const repository = await WorkflowRepository;
     const configId = await repository.addActionConfiguration(data);
     const { url, triggerInput, triggerInputValue } = data;
-    const res = await axios.get(`${url}?${triggerInput}=${triggerInputValue}`);
+    let outgoingUrl = url;
+    if (triggerInput && triggerInputValue) {
+      outgoingUrl = `${url}?${triggerInput}=${triggerInputValue}`;
+    }
+    const res = await axios.get(outgoingUrl);
 
     await repository.addActionResult({
       ...res.data,

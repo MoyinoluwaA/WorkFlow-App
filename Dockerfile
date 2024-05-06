@@ -28,8 +28,6 @@ RUN npm run build
 # Stage 2: Serve the app
 FROM base AS runtime
 WORKDIR /app
-COPY package*.json ./
-RUN npm install --omit=dev
 COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
 EXPOSE 3000

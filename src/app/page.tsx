@@ -30,7 +30,7 @@ export default function Home() {
       <Navbar session={session} />
       <main className="relative py-[200px]">
         <h1 className="mb-5 text-center text-xl font-bold">
-          Automate your tasks with our Workflow APP
+          Automate with our Workflow APP
         </h1>
         <div className="mx-auto w-[90%] sm:w-[450px]">
           {workflow.map((workflowItem, index) => {

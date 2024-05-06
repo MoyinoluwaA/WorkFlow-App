@@ -19,6 +19,13 @@ export interface FormProps {
   triggerInputValue: string;
 }
 
+export interface Error {
+  error: boolean;
+  code: number;
+  statusText: string;
+  message: string;
+}
+
 const Sidebar = ({ workflow, setShowSidebar }: SidebarProps) => {
   const [form, setForm] = useState<FormProps>({
     action: 'GET',
@@ -27,6 +34,8 @@ const Sidebar = ({ workflow, setShowSidebar }: SidebarProps) => {
     triggerInputValue: '',
   });
   const [triggerDisabled, setTriggerDisabled] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
   const [jsonResult, setJsonResult] = useState<AxiosResponse | null>(null);
 
   useEffect(() => {
@@ -35,12 +44,10 @@ const Sidebar = ({ workflow, setShowSidebar }: SidebarProps) => {
 
   const validateForm = (form: FormProps) => {
     const { action, url, triggerInput, triggerInputValue } = form;
-    if (
-      action.length > 0 &&
-      url.length > 0 &&
-      triggerInput.length > 0 &&
-      triggerInputValue.length > 0
-    ) {
+    if (action.length > 0 && url.length > 0) {
+      if (triggerInputValue.length > 0 && triggerInput.length === 0) {
+        return setTriggerDisabled(true);
+      }
       setTriggerDisabled(false);
     } else {
       setTriggerDisabled(true);
@@ -55,12 +62,19 @@ const Sidebar = ({ workflow, setShowSidebar }: SidebarProps) => {
   };
 
   const handleTrigger = async () => {
-    const res = await sendApiRequest(form);
-    if (res) {
+    setLoading(true);
+    setJsonResult(null);
+    setError(null);
+    try {
+      const res = await sendApiRequest(form);
+      setError(null);
       setJsonResult(res!);
-    } else {
+    } catch (error: any) {
+      const res = JSON.parse(error.message);
+      setError(res);
       setJsonResult(null);
     }
+    setLoading(false);
   };
 
   const handleHideShowSidebar = () => {
@@ -80,7 +94,7 @@ const Sidebar = ({ workflow, setShowSidebar }: SidebarProps) => {
         <Button
           onClick={handleTrigger}
           className="mx-3 my-5 bg-[#f9dd3e] disabled:opacity-50"
-          disabled={triggerDisabled}
+          disabled={triggerDisabled || loading}
         >
           Trigger Incoming API Call
         </Button>
@@ -153,6 +167,17 @@ const Sidebar = ({ workflow, setShowSidebar }: SidebarProps) => {
           </div>
         </form>
       </section>
+
+      {loading && <span className="my-8 text-center">Fetching data....</span>}
+
+      {error && error.error && (
+        <div className="px-3 py-5">
+          <p className="text-md font-bold">
+            {error.statusText}: {error.code}
+          </p>
+          <p>{error.message}</p>
+        </div>
+      )}
 
       {jsonResult && (
         <section className="px-3 py-5">

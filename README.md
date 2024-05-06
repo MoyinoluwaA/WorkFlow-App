@@ -44,6 +44,8 @@ If you will like to run this application locally, follow these steps:
   NEXTAUTH_URL = <NEXTAUTH_URL> base url of application to be used by next-auth
 ```
 
+Read this [article](https://medium.com/@vi.nhon.53th/next-js-v13-demo-login-with-github-and-google-31cd56e547de) to learn how to configure Google and Github, and get `GOOGLE_ID`, `GOOGLE_SECRET`, `GITHUB_ID` and `GITHUB_SECRET`.
+
 - Run the application with the command:
 
 ```
@@ -69,4 +71,38 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Prerequisites:
 - Dockerfile: in the root of the repository
-- 
+- env: Environment variables required by the application
+
+### STEPS FOR DEPLOYMENT
+
+1. Create an Amazon ECR repository to store your images via console or cli.
+
+Using cli:
+```
+  aws ecr create-repository \
+    --repository-name MY_ECR_REPOSITORY \
+    --region MY_AWS_REGION
+```
+
+2.  Create an Amazon ECS task definition, cluster, and service. Follow the steps [here](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/getting-started-fargate.html). Add a Load balancer to the ECS Service to get a live url as the task definition public ip changes with each deployment.
+
+3.  Store the Amazon ECS task definition as a JSON file in the GitHub repository or use the one present in .aws/task-definition.json. Set the `ECS_TASK_DEFINITION` variable in Github Actions to the path of the JSON file.
+
+4. Create GitHub Actions secrets named AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to store the values for your Amazon IAM access key.
+
+5. Create variables on Github Actions to store the AWS `ECR_REPOSITORY`, `ECS_CLUSTER`, `ECS_SERVICE` and `CONTAINER_NAME` as these values will be referenced in the github workflow. 
+
+6.  Add application environment variables to Github Actions as variables or secret. Github does not permit adding env to actions with a github prefix, so you can update the env name from `GITHUB_ID` and `GITHUB_SECRET` to `OAUTH_GITHUB_ID` and `OAUTH_GITHUB_SECRET` or any name of your choice.
+
+7. Create a .github/deployment.yml file and add jobs or use the one in repository. The jobs included are:
+-  **Lint:** to ensure the application is linted and passes all checks.
+- **Test:** run e2e test with Cypress to ensure functionality works as expected.
+- **Scan:** scan code to ensure no vulnerabilities have been introduced.
+- **Deploy:** When lint, test and scan passes, the deploy job is run. It consists of various steps namely:
+		- Configuring AWS credentials so the job can access push to ECR and deploy to ECS.
+		- Login to Amazon ECR.
+		- Build docker image with environment variables and push to specified ECR Repository.
+		- Update the task definition file with the newly pushed docker image id.
+		- Deploy the task definition to ECS using specified ECS Cluster and Service.
+
+**Note:** After Deployment, update the Authorized JavaScript origins and Authorized redirect URIs to include the deployed url in the project OAuth 2.0 Client IDs configuration (Google and Github).
