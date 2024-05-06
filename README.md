@@ -88,13 +88,13 @@ Using cli:
 
 3.  Store the Amazon ECS task definition as a JSON file in the GitHub repository or use the one present in .aws/task-definition.json. Set the `ECS_TASK_DEFINITION` variable in Github Actions to the path of the JSON file.
 
-4. Create GitHub Actions secrets named AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to store the values for your Amazon IAM access key.
+4. Create GitHub Actions secrets named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to store the values for your Amazon IAM access key.
 
 5. Create variables on Github Actions to store the AWS `ECR_REPOSITORY`, `ECS_CLUSTER`, `ECS_SERVICE` and `CONTAINER_NAME` as these values will be referenced in the github workflow. 
 
 6.  Add application environment variables to Github Actions as variables or secret. Github does not permit adding env to actions with a github prefix, so you can update the env name from `GITHUB_ID` and `GITHUB_SECRET` to `OAUTH_GITHUB_ID` and `OAUTH_GITHUB_SECRET` or any name of your choice.
 
-7. Create a .github/deployment.yml file and add jobs or use the one in repository. The jobs included are:
+7. Create a `.github/deployment.yml` file and add jobs or use the one in repository. The jobs included are:
 -  **Lint:** to ensure the application is linted and passes all checks.
 - **Test:** run e2e test with Cypress to ensure functionality works as expected.
 - **Scan:** scan code to ensure no vulnerabilities have been introduced.
