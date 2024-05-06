@@ -3,7 +3,7 @@
 ## Introduction
 Workflow App is a simple application where on trigger of an action, it creates an outgoing API call. The trigger is a call to an internal endpoint. The UI requires an input URL with a query param to trigger the API Call. API configuration calls are being stored in MongoDb.
 
-Application was built with NextJs, Typescript, TailwindCSS, MongoDb and Next-Auth for Oauth authentication. CI/CD was done using Github actions.
+Application was built with NextJs, Typescript, TailwindCSS, MongoDb and Next-Auth for Oauth authentication. CI/CD was done using Github actions. Application was containerized, pushed to AWS ECR and deployed to AWS ECS with Fargate.
 
 On load of application, user authenticates using either Google or Github credentials. User can then access the application functionality.
 
@@ -105,4 +105,6 @@ Using cli:
 		- Update the task definition file with the newly pushed docker image id.
 		- Deploy the task definition to ECS using specified ECS Cluster and Service.
 
-**Note:** After Deployment, update the Authorized JavaScript origins and Authorized redirect URIs to include the deployed url in the project OAuth 2.0 Client IDs configuration (Google and Github).
+**Note:** 
+- After Deployment, update the Authorized JavaScript origins and Authorized redirect URIs to include the deployed url in the project OAuth 2.0 Client IDs configuration (Google and Github).
+- Access the deployed application using the Load balancer url.

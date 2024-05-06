@@ -98,6 +98,9 @@ const Sidebar = ({ workflow, setShowSidebar }: SidebarProps) => {
         >
           Trigger Incoming API Call
         </Button>
+        <p className="px-3 text-sm">
+          Please fill in the details of the outgoing api call you want to make.
+        </p>
       </section>
 
       <section>
