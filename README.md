@@ -1,11 +1,17 @@
 # Workflow App
 
 ## Introduction
-Workflow App is a simple application where on trigger of an action, it creates an outgoing API call. The trigger is a call to an internal endpoint. The UI requires an input URL with a query param to trigger the API Call. API configuration calls are being stored in MongoDb.
-
-Application was built with NextJs, Typescript, TailwindCSS, MongoDb and Next-Auth for Oauth authentication. CI/CD was done using Github actions. Application was containerized, pushed to AWS ECR and deployed to AWS ECS with Fargate.
+Workflow App is a simple application where on trigger of an action, it creates an outgoing API call. The trigger is a call to an internal endpoint. The UI requires an input URL with a query param to trigger the API Call. API configuration calls and results are stored in MongoDb.
 
 On load of application, user authenticates using either Google or Github credentials. User can then access the application functionality.
+
+### Tech Stack
+- NextJs, Typescript, TailwindCSS, MongoDb and Mongoose.
+- Joi for API Input validation.
+- Next-Auth for Oauth authentication. 
+- Github actions for CI/CD. 
+- Docker, AWS ECR and AWS ECS with Fargate for deploying containerized application.
+- Cypress for E2E Testing.
 
 ## API Documentation
 Link - [Workflow App API](https://documenter.getpostman.com/view/15779746/2sA3JGg4En)
@@ -44,7 +50,7 @@ If you will like to run this application locally, follow these steps:
   NEXTAUTH_URL = <NEXTAUTH_URL> base url of application to be used by next-auth
 ```
 
-Read this [article](https://medium.com/@vi.nhon.53th/next-js-v13-demo-login-with-github-and-google-31cd56e547de) to learn how to configure Google and Github, and get `GOOGLE_ID`, `GOOGLE_SECRET`, `GITHUB_ID` and `GITHUB_SECRET`.
+Read this [article](https://medium.com/@vi.nhon.53th/next-js-v13-demo-login-with-github-and-google-31cd56e547de) to learn how to configure Google and Github, and get the `GOOGLE_ID`, `GOOGLE_SECRET`, `GITHUB_ID` and `GITHUB_SECRET` values.
 
 - Run the application with the command:
 
@@ -75,7 +81,7 @@ Prerequisites:
 
 ### STEPS FOR DEPLOYMENT
 
-1. Create an Amazon ECR repository to store your images via console or cli.
+1. Create an Amazon ECR repository to store your images via the AWS console or cli.
 
 Using cli:
 ```
@@ -84,7 +90,7 @@ Using cli:
     --region MY_AWS_REGION
 ```
 
-2.  Create an Amazon ECS task definition, cluster, and service. Follow the steps [here](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/getting-started-fargate.html). Add a Load balancer to the ECS Service to get a live url as the task definition public ip changes with each deployment.
+2.  Create an Amazon ECS task definition, cluster, and service. Follow the steps [here](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/getting-started-fargate.html). Add an Application Load balancer to the ECS Service to get the deployed application url as the task definition public ip changes with each deployment.
 
 3.  Store the Amazon ECS task definition as a JSON file in the GitHub repository or use the one present in .aws/task-definition.json. Set the `ECS_TASK_DEFINITION` variable in Github Actions to the path of the JSON file.
 
@@ -105,6 +111,7 @@ Using cli:
 		- Update the task definition file with the newly pushed docker image id.
 		- Deploy the task definition to ECS using specified ECS Cluster and Service.
 
+8. View the deployed application using the Load balancer url.
+
 **Note:** 
-- After Deployment, update the Authorized JavaScript origins and Authorized redirect URIs to include the deployed url in the project OAuth 2.0 Client IDs configuration (Google and Github).
-- Access the deployed application using the Load balancer url.
+- After Deployment, update the Authorized JavaScript origins and Authorized redirect URIs to include the deployed url (load balancer url) in the project OAuth 2.0 Client IDs configuration (Google and Github).

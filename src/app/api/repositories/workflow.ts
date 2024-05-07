@@ -1,14 +1,12 @@
-import clientPromise from '../../lib/mongodb';
+import ActionConfig from '../models/actionConfig';
 import { CustomError } from '../utils/response';
+import ActionConfigResult from '../models/actionResult';
 
 const WorkflowRepository = async () => {
   const addActionConfiguration = async (data: Object) => {
     try {
-      const client = await clientPromise;
-      const db = client.db('workflow-app');
-      const workflowAction = db.collection('action-configuration');
-      const result = await workflowAction.insertOne(data);
-      return result.insertedId;
+      const result = await ActionConfig.create(data);
+      return result._id;
     } catch (error: any) {
       throw new CustomError(
         'An error occured while adding data to database',
@@ -20,11 +18,8 @@ const WorkflowRepository = async () => {
 
   const addActionResult = async (data: Object) => {
     try {
-      const client = await clientPromise;
-      const db = client.db('workflow-app');
-      const workflowAction = db.collection('outgoing-api-calls');
-      const result = await workflowAction.insertOne(data);
-      return result.insertedId;
+      const result = await ActionConfigResult.create(data);
+      return result;
     } catch (error: any) {
       throw new CustomError(
         'An error occured while adding data to database',

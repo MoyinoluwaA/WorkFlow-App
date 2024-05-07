@@ -3,10 +3,13 @@ import WorkflowRepository from '../repositories/workflow';
 import { validateInput } from '../middlewares/validation';
 import { addActionSchema } from '../schemas/action';
 import { NextRequest, NextResponse } from 'next/server';
+import connectMongo from '../../lib/connect';
+import { TriggerActionDto } from './trigger-action.dto';
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
+    await connectMongo();
+    const data: TriggerActionDto = await request.json();
     await validateInput(addActionSchema, data);
 
     const repository = await WorkflowRepository;
