@@ -105,11 +105,11 @@ Using cli:
 - **Test:** run e2e test with Cypress to ensure functionality works as expected.
 - **Scan:** scan code to ensure no vulnerabilities have been introduced.
 - **Deploy:** When lint, test and scan passes, the deploy job is run. It consists of various steps namely:
-		- Configuring AWS credentials so the job can access push to ECR and deploy to ECS.
-		- Login to Amazon ECR.
-		- Build docker image with environment variables and push to specified ECR Repository.
-		- Update the task definition file with the newly pushed docker image id.
-		- Deploy the task definition to ECS using specified ECS Cluster and Service.
+	- Configuring AWS credentials so the job can access push to ECR and deploy to ECS.
+	- Login to Amazon ECR.
+	- Build docker image with environment variables and push to specified ECR Repository.
+	- Update the task definition file with the newly pushed docker image id.
+	- Deploy the task definition to ECS using specified ECS Cluster and Service.
 
 8. View the deployed application using the Load balancer url.
 
